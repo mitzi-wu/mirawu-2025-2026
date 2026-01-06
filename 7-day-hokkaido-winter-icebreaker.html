@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>北海道流冰雪國之旅</title>
+<style>
+    /* ================= 全局設定 ================= */
+    body {
+        font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* 防止動態導致橫向卷軸 */
+        background-color: #f4f7f6; /* 增加一點背景色讓白色區塊更跳 */
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.5s ease; /* 圖片通用動態 */
+        border-radius: 0 !important; /* [修正] 強制移除所有圖片的圓角 */
+    }
+    
+    /* 容器設定 */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 20px;
+        background-color: #fff; /* 內容區域為白色 */
+        box-shadow: 0 0 20px rgba(0,0,0,0.05); /* 增加一點陰影讓整體更有層次 */
+    }
+
+    /* 標題樣式 */
+    h3 {
+        color: #0b3a66;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .section-title {
+        background: linear-gradient(90deg, #003366, #1E90FF); /* 漸層藍 */
+        color: #FFFFFF;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px 0;
+        margin: 50px 0 30px;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+    /* 標題光影掃過動畫 */
+    .section-title::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    /* ================= 動態效果 (Scroll Reveal) ================= */
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease-out;
+    }
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* 頂部大圖設定 */
+    .hero-images {
+        margin-bottom: 30px;
+    }
+    .hero-images img { 
+        width: 100%; 
+        margin-bottom: 10px;
+        /* border-radius: 8px; [已移除] */
+    }
+
+    /* 分隔線圖片 */
+    .divider-img {
+        width: 100%;
+        max-width: 1600px; /* 雖然設了1600，但因為在container內，所以會被限制在1200 */
+        margin: 40px auto;
+    }
+
+    /* 通用網格系統 */
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    .grid-item { background: #fff; }
+    .grid-item p {
+        padding: 10px;
+        text-align: justify;
+        font-size: 15px;
+    }
+    /* 圖片滑鼠懸停效果 */
+    .grid-item:hover img, .lake-card:hover img {
+        transform: scale(1.05);
+    }
+    .grid-item, .lake-card .img-wrap {
+        overflow: hidden; /* 確保放大不超出邊框 */
+        border-radius: 0; /* [修正] 移除圓角 */
+    }
+
+    /* 湖泊介紹卡片 */
+    .lake-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.3s;
+    }
+    .lake-card:hover { transform: translateY(-5px); }
+    .lake-card img { margin-bottom: 10px; }
+
+    /* 地圖小圖區塊 */
+    .map-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 40px 0;
+    }
+    .map-icons img {
+        max-width: 150px;
+        transition: transform 0.3s;
+    }
+    .map-icons img:hover { transform: scale(1.1); }
+
+    /* ================= 行程路線區塊 (互動式) ================= */
+    .route-wrap {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+        margin-top: 30px;
+        background-color: #f8fbff; /* 極淡的藍底 */
+        padding: 30px;
+        border-radius: 0; /* [修正] 移除圓角 */
+        border: 1px solid transparent;
+        transition: all 0.4s ease;
+    }
+    .route-wrap:hover {
+        background-color: #fff;
+        box-shadow: 0 10px 30px rgba(0,51,102,0.1); /* 深藍色陰影 */
+        transform: translateY(-5px);
+    }
+    .route-map { flex: 1.5; }
+    .route-text { flex: 1; }
+
+    /* 每一天的行 (互動核心) */
+    .day-row {
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #dae1e7;
+        padding-bottom: 15px;
+        padding-left: 10px;
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+    /* 滑鼠移過去的效果 */
+    .day-row:hover {
+        padding-left: 20px; /* 往右縮 */
+        background-color: #fff;
+        border-left: 4px solid #1E90FF; /* 左側亮藍條 */
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    .day-row:last-child { border-bottom: none; }
+
+    .day-badge {
+        display: inline-block;
+        background: #003366; /* 深藍色背景 */
+        color: #fff;
+        padding: 4px 12px;
+        border-radius: 20px; /* 圓角維持，這是標籤的樣式 */
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 8px;
+        transition: transform 0.3s;
+    }
+    .day-row:hover .day-badge {
+        background: #1E90FF; /* hover 變亮藍 */
+        transform: scale(1.05);
+    }
+    
+    .day-row p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    /* 手機版響應式調整 */
+    @media (max-width: 768px) {
+        .grid-3 { grid-template-columns: 1fr; }
+        .route-wrap { flex-direction: column; padding: 20px; }
+        .map-icons { flex-wrap: wrap; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="hero-images reveal">
+        <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005284.JPG" alt="Header 1" />
+        <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005285.JPG" alt="Header 2" />
+    </div>
+
+    <div class="grid-3 flowice-grid reveal">
+        <div class="grid-item">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005288.JPG" alt="Garinko號" />
+            <p>
+                <span style="color:#003366; font-size:18px; font-weight:bold;">❄︎ 紋別流冰觀光船｜冬季看點</span><br>
+                每年1月至3月，鄂霍次克海被流冰覆蓋。搭乘配備巨大鑽頭的 Garinko 號，體驗船體震動與冰塊碎裂的震撼。運氣好的話，還能在甲板上近距離觀賞來自北方的流冰與野生動物。
+            </p>
+        </div>
+        <div class="grid-item"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005286.JPG" alt="Garinko 1" /></div>
+        <div class="grid-item"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005287.JPG" alt="Garinko 2" /></div>
+    </div>
+
+    <img class="divider-img reveal" src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005444.JPG" alt="Divider" />
+
+    <div class="grid-3 reveal">
+        <div class="grid-item"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005289.JPG" alt="View 1" /></div>
+        <div class="grid-item"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005290.JPG" alt="View 2" /></div>
+        <div class="grid-item"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005291.JPG" alt="View 3" /></div>
+    </div>
+
+    <div class="reveal" style="margin: 20px 0; text-align: justify;">
+        <p>除了流冰船，我們也前往野付半島欣賞一望無際的「冰平線」。這座僅數十公尺寬的細長沙洲，冬天野付灣結冰後彷彿白色天橋，海天一線純淨無比。沿途還會造訪摩周湖、阿寒湖，感受北海道冬季最澄澈的雪景。</p>
+    </div>
+
+    <img class="divider-img reveal" src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005444.JPG" alt="Divider" />
+
+    <div class="grid-3 lake-grid reveal">
+        <div class="lake-card">
+          <div class="img-wrap"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005296.JPG" alt="阿寒湖" /></div>
+            <h3>摩周湖：神祕的摩周藍</h3>
+            <p>以高透明度著稱的神祕湖泊。冬季的摩周湖被樹冰環繞，展現出深邃的「摩周藍」。穿著雪鞋漫步至展望台，眺望這片寧靜而神聖的景色，心靈也隨之沉澱。</p>
+        </div>
+        <div class="lake-card">
+          <div class="img-wrap"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005297.JPG" alt="屈斜路湖" /></div>
+            <h3>阿寒湖：冰上嘉年華</h3>
+            <p>阿寒湖結冰後成為巨大的冰上樂園。您可以在這裡體驗冰上釣公魚、騎乘冰上摩托車或香蕉船。夜晚的阿寒湖更加迷人，有機會欣賞到美麗的煙火與冰雕。</p>
+        </div>
+        <div class="lake-card">
+            <div class="img-wrap"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005298.JPG" alt="摩周湖" /></div>
+            <h3>屈斜路湖畔砂湯</h3>
+            <p>日本最大的火山口湖。冬季時，地熱讓湖畔的砂岸保持溫暖，吸引數百隻大天鵝在此休憩。皚皚白雪、氤氳熱氣與優雅的天鵝，構成一幅如畫般的夢幻場景。</p>
+        </div>
+    </div>
+
+    <img class="divider-img reveal" src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005444.JPG" alt="Divider" />
+
+    <div class="grid-3 reveal">
+        <div class="grid-item">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005292.JPG" alt="SL濕原號" />
+            <p>
+                <span style="color:#003366; font-size:18px; font-weight:bold;">JR SL冬之濕原號  釧路濕原的復古蒸氣火車</span><br>
+                
+                冬季限定運行的超人氣觀光列車。伴隨著響亮的汽笛聲，SL蒸氣火車穿梭在銀白色的釧路濕原中。車廂內設有復古煤炭暖爐，您可以在此烤魷魚，欣賞窗外丹頂鶴與蝦夷鹿的身影。
+            </p>
+        </div>
+        <div class="grid-item"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005293.JPG" alt="火車內景" /></div>
+        <div class="grid-item"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005294.JPG" alt="火車外觀" /></div>
+    </div>
+
+    <div class="grid-3 lake-grid reveal" style="margin-top: 40px;">
+        <div class="lake-card">
+            <div class="img-wrap"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005299.JPG" alt="丹頂鶴" /></div>
+            <h3>別寒部牛濕原｜流冰與濕地的交會</h3>
+            <p>冬日的別寒部牛濕原白雪覆地，沿岸冰層漂浮。可見野鳥於濕原飛翔，海與雪原交織出靜謐冬景。</p>
+        </div>
+        <div class="lake-card">
+            <div class="img-wrap"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005300.JPG" alt="支笏湖冰濤祭" /></div>
+            <h3>花咲線沿途風光｜冬日的原野列車</h3>
+            <p>列車穿越雪原與森林，沿途盡是寧靜白景。偶爾有鹿群與丹頂鶴現身窗外，點綴冬日原野。</p>
+        </div>
+        <div class="lake-card">
+            <div class="img-wrap"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001266/00005301.JPG" alt="知床流冰漫步" /></div>
+            <h3>厚岸｜冬日海港與牡蠣之鄉</h3>
+            <p>雪中的厚岸大橋映著海霧，港灣靜謐寧和。此時正值牡蠣季，暖湯與寒風交織出冬日滋味。</p>
+        </div>
+    </div>
+
+    <div class="section-title reveal">詳細路線圖</div>
+    
+    <div class="route-wrap reveal">
+        <div class="route-map">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000469/001257/001263/00005280.PNG" alt="北海道路線圖" />
+        </div>
+        <div class="route-text">
+            <div class="day-row">
+                <span class="day-badge">Day 1</span>
+                <p>台北 → 東京 → 旭川</p>
+            </div>
+
+            <div class="day-row">
+                <span class="day-badge">Day 2</span>
+                <p>飯店 → 美瑛~青池秘境 → 旭山動物園 → 旭川拉麵村 → 紋別港的螃蟹角</p>
+            </div>
+
+            <div class="day-row">
+                <span class="day-badge">Day 3</span>
+                <p>住宿飯店 → 流冰破冰船 → 屈斜路湖畔砂湯 → 阿寒湖或屈斜路湖</p>
+            </div>
+
+            <div class="day-row">
+                <span class="day-badge">Day 4</span>
+                <p>住宿飯店 → 阿寒湖冰上嘉年華 → 摩周湖展望台 → 住宿飯店</p>
+            </div>
+
+            <div class="day-row">
+                <span class="day-badge">Day 5</span>
+                <p>住宿飯店 → 野付半島「冰平線漫步」→ 「根室半島」→「花咲線(根室本線)列車」(根室站-厚岸站) → 住宿飯店</p>
+            </div>
+
+            <div class="day-row">
+                <span class="day-badge">Day 6</span>
+                <p>住宿飯店 → 然別湖冰上村 → 住宿飯店</p>
+            </div>
+
+            <div class="day-row">
+                <span class="day-badge">Day 7</span>
+                <p>住宿飯店 → 帶廣機場 → 東京 → 台北</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin: 40px 0; color: #0000FF; font-weight: bold;">
+        ※ 行程順序可能因當地交通或天候狀況進行調整，敬請見諒。
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observerCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>秩父+新潟佐渡+小東北 賞櫻7日</title>
+<style>
+    /* ================= 全局設定 ================= */
+    body {
+        font-family: "Microsoft JhengHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.8;
+        color: #444;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        overflow-x: hidden;
+    }
+    
+    .container {
+        width: 96%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 0;
+    }
+
+    /* 圖片通用設定 */
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0; 
+        transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+        will-change: transform;
+    }
+
+    /* 標題樣式 (滑入動態) */
+    h2 {
+        color: #003366; 
+        font-weight: 700;
+        font-size: 26px;
+        margin-bottom: 20px;
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 20px;
+        
+        /* 初始狀態 */
+        opacity: 0; 
+        transform: translateX(-30px);
+        transition: all 0.8s ease-out 0.2s;
+    }
+    
+    /* 標題進場後 */
+    .reveal.active h2 {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    /* 粉紅飾條動態生長效果 */
+    h2::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        bottom: 15px;
+        width: 5px;
+        background-color: #ff6699; /* 紫藤粉色 */
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+    }
+
+    .reveal.active h2::before {
+        transform: scaleY(1);
+    }
+
+    /* 內文樣式 */
+    p {
+        margin-bottom: 1.3em;
+        text-align: justify;
+        font-size: 16px;
+        color: #666;
+        letter-spacing: 0.05em;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out 0.3s;
+    }
+
+    .reveal.active p {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ================= 捲動偵測容器 (Scroll Reveal) ================= */
+    .reveal {
+        opacity: 0;
+        transition: opacity 1s ease-out;
+    }
+    .reveal.active {
+        opacity: 1;
+    }
+
+    /* 全版主圖 Zoom-out 進場動畫 */
+    .hero-banner-wrap {
+        overflow: hidden;
+        margin-bottom: 40px;
+    }
+    .hero-banner {
+        width: 96%;
+        max-width: 1200px;
+        margin: 0 auto;
+        height: auto; 
+        display: block;
+        border-radius: 0;
+        animation: zoomOutEnter 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes zoomOutEnter {
+        from { transform: scale(1.1); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    /* ================= 排版模組 (Zig-Zag) ================= */
+    .feature-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin-bottom: 60px;
+        align-items: center;
+    }
+
+    .feature-row:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .feature-row .img-col {
+        flex: 1 1 50%;
+        position: relative; 
+        box-shadow: none; 
+        border-radius: 0; 
+        overflow: hidden;
+        
+        /* 圖片區塊進場 */
+        opacity: 0;
+        transform: scale(0.95);
+        transition: all 1s ease-out;
+    }
+    
+    .feature-row.active .img-col {
+        opacity: 1;
+        transform: scale(1);
+    }
+    
+    .feature-row .img-col:hover img {
+        transform: scale(1.1); /* 滑鼠懸停放大 */
+        filter: brightness(1.05);
+    }
+
+    .feature-row .text-col {
+        flex: 1 1 40%;
+        padding: 10px;
+    }
+
+    /* ================= 雙圖並排畫廊 ================= */
+    .gallery-two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    .gallery-two .img-box {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0; 
+        
+        /* 雙圖進場 */
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease-out;
+    }
+    
+    .gallery-two.active .img-box:nth-child(1) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.1s;
+    }
+    .gallery-two.active .img-box:nth-child(2) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.3s;
+    }
+
+    .gallery-two .img-box:hover img {
+        transform: scale(1.1);
+    }
+
+    /* ================= 三欄卡片 (Lake Grid) ================= */
+    .lake-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin: 60px 0;
+    }
+    .lake-card {
+        background: #fff;
+        padding: 0;
+        text-align: center;
+        border-radius: 0; 
+        overflow: hidden;
+        box-shadow: none; 
+        border: 1px solid #eee; 
+        transition: border-color 0.3s, transform 0.3s;
+    }
+    
+    .lake-card:hover {
+        transform: translateY(-5px);
+        border-color: #ff6699;
+    }
+    .lake-card:hover .img-box img {
+        transform: scale(1.05);
+    }
+    .lake-card .img-box { overflow: hidden; }
+
+    .lake-card-content {
+        padding: 20px;
+    }
+
+    .lake-card h3 {
+        color: #ff6699;
+        margin: 0 0 10px 0;
+        font-size: 18px;
+    }
+    .lake-card p {
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 0;
+        opacity: 1; /* 卡片內文字直接顯示 */
+        transform: none;
+    }
+
+    /* ================= 標題條 (修改：單純粉色) ================= */
+    .section-bar {
+        background: #ff6699; /* 改為單純粉色，移除漸層 */
+        color: #fff;
+        text-align: center;
+        padding: 15px;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 60px 0 40px;
+        letter-spacing: 3px;
+        border-radius: 0; 
+        position: relative;
+        overflow: hidden;
+    }
+    /* 移除閃光動畫效果以保持"單純" (若想保留動畫可不刪除這段) */
+    .section-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shimmer 3s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    /* ================= 行程路線區塊 (互動式) ================= */
+    .route-wrap {
+        display: flex;
+        gap: 50px;
+        margin-bottom: 40px;
+        align-items: flex-start; 
+        background-color: #f9f9f9;
+        padding: 30px;
+        border-radius: 0; 
+        border: 1px solid transparent;
+        transition: all 0.4s ease;
+    }
+    .route-wrap:hover {
+        background-color: #fff;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        transform: translateY(-5px);
+    }
+    
+    /* 地圖樣式調整 (修改：移除所有外框) */
+    .route-map { 
+        flex: 1.2; 
+    }
+    .route-map img {
+        border: none;    /* 移除邊框 */
+        padding: 0;      /* 移除內距 */
+        background: transparent;
+        box-shadow: none; /* 確保無陰影 */
+    }
+
+    .route-text { flex: 1; }
+    
+    .day-row {
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #ddd;
+        padding-bottom: 15px;
+        padding-left: 10px;
+        border-left: 3px solid transparent;
+        transition: all 0.3s ease;
+        cursor: default;
+    }
+    /* 滑鼠移過去某一天，該天會亮起來 */
+    .day-row:hover {
+        padding-left: 20px;
+        background-color: #fff;
+        border-left: 3px solid #ff6699;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    .day-row:last-child { border-bottom: none; }
+
+    /* 行程標籤 Day Badge 粉色 */
+    .day-badge {
+        display: inline-block;
+        background: #ff6699; /* 維持粉色 */
+        color: #fff;
+        padding: 4px 12px;
+        font-weight: bold;
+        border-radius: 0; 
+        font-size: 13px;
+        margin-bottom: 8px;
+        transition: transform 0.3s;
+    }
+    .day-row:hover .day-badge {
+        background: #003366; 
+        transform: scale(1.1);
+    }
+    
+    /* 行程內文 (小字) 強制純黑色 */
+    .route-text p {
+        text-align: left;
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+        opacity: 1; 
+        transform: none;
+        color: #000000 !important; /* 維持純黑色 */
+    }
+
+    /* ================= RWD 手機版設定 ================= */
+    @media (max-width: 768px) {
+        .container { width: 92%; }
+        .hero-banner { width: 92%; }
+
+        .feature-row { 
+            flex-direction: column !important;
+            gap: 20px; 
+            margin-bottom: 50px;
+        }
+        .feature-row:nth-child(even) {
+            flex-direction: column !important;
+        }
+        .feature-row .img-col, .feature-row .text-col { flex: 1 1 100%; width: 100%; }
+
+        .feature-row .text-col { padding: 10px 0; }
+        .container > p { padding: 0; }
+
+        .gallery-two, .lake-grid, .video-grid, .route-wrap {
+            grid-template-columns: 1fr;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .route-wrap { padding: 20px; }
+        
+        /* 手機版簡化動畫 */
+        h2, p { transition: opacity 0.5s; transform: none; opacity: 1; }
+        .feature-row .img-col { transform: none; opacity: 1; }
+    }
+</style>
+</head>
+<body>
+
+<div class="hero-banner-wrap">
+    <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005588.JPG" alt="東京紫藤與粉蝶" class="hero-banner">
+</div>
+
+<div class="container">
+
+    <div class="gallery-two reveal">
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005589.JPG" alt="足利花卉公園"></div>
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005590.JPG" alt="紫藤花海"></div>
+    </div>
+    
+    <div class="gallery-two reveal">
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005591.JPG" alt="夜藤"></div>
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005592.JPG" alt="粉蝶花"></div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005593.JPG" alt="大藤">
+        </div>
+        <div class="text-col">
+            <h2>小諸懷古園</h2>
+            <p>位於長野的小諸懷古園，是日本百大名城與百大賞櫻名所之一。園區由小諸城遺跡所改建，古城門、石垣與滿開櫻花相映成趣；春天更有盛大的「櫻祭」。</p>
+        </div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005594.JPG" alt="粉蝶花">
+        </div>
+        <div class="text-col">
+            <p>園內櫻花品種多、花期錯落，無論何時造訪都能欣賞到不同層次的春日風景。漫步其中，彷彿置身歷史與櫻花交織的時光長廊，是長野春季不可錯過的賞櫻名點。</p>
+        </div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005595.JPG" alt="高田城址公園">
+        </div>
+        <div class="text-col">
+            <h2>高田城址公園</h2>
+            <p>每年 4 月，高田城址公園迎來最迷人的染井吉野櫻盛放時節，全園區超過四千株櫻花沿著護城河綿延展開，形成淡粉色的春日瀑布。白天能欣賞櫻花倒映在水面的柔美景色，漫步橋上更能感受被櫻花包圍的浪漫氛圍。入夜後，櫻花在燈光映照下更加夢幻，被稱為「日本三大夜櫻」之一。</p>
+        </div>
+    </div>
+
+    <div class="lake-grid reveal">
+        <div class="lake-card">
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005599.JPG" alt="真野公園"></div>
+            <div class="lake-card-content">
+                <h3>真野公園</h3>
+                <p>2000株櫻花滿開最壯觀，夜間點燈更添浪漫，八反製成的紙燈籠成排點亮春夜氣氛迷人。</p>
+            </div>
+        </div>
+        <div class="lake-card">
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005600.JPG" alt="船津公園"></div>
+            <div class="lake-card-content">
+                <h3>船津公園</h3>
+                <p>櫻花一路延伸至豬苗代湖畔，油菜花同時盛開，遠望磐梯山的春日美景靜雅又迷人。</p>
+            </div>
+        </div>
+        <div class="lake-card">
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005601.JPG" alt="信濃川安樂堤"></div>
+            <div class="lake-card-content">
+                <h3>信濃川安樂堤綠地</h3>
+                <p>萬代橋旁河堤櫻花搭配鬱金香綻放，粉紅與鮮色交織成春季限定景致，漫步其間格外舒心。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005602.JPG" alt="長瀞川遊船">
+        </div>
+        <div class="text-col">
+            <h2>長瀞川遊船</h2>
+            <p>搭乘傳統木造船隻，由經驗豐富的船夫掌舵，僅憑一支長篙便能在急流與靜水間自如穿梭。航程中既有激流勇進、水花四濺的驚險快感，亦有隨波逐流、聽著船夫幽默導覽的愜意時光。</p>
+            <p>途經被指定為國家名勝的「岩疊」，層層堆疊的天然奇岩與碧綠清澈的荒川交織，景色壯麗如畫。四季風情更是迷人：春賞櫻花隧道、夏享沁涼新綠、秋觀滿山紅葉，冬季則有獨特的「暖桌船」，讓您在溫暖被爐中細品溪谷雪景。</p>
+        </div>
+    </div>
+    
+    <div class="gallery-two reveal">
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005604.JPG" alt="箱根神社"></div>
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005605.JPG" alt="水上鳥居"></div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005606.JPG" alt="小木盆舟">
+        </div>
+        <div class="text-col">
+            <h2>佐渡島．小木盆舟體驗</h2>
+            <p>四月的佐渡島迎來最舒服的旅行季節，海面開始變得澄澈透亮，沿岸新綠冒芽，搭乘小木盆舟時能感受到春天的氣息迎面而來。由當地特有的「盆舟」改裝而成的小木舟，在海面上輕巧旋轉、移動靈活，船伕以傳統方式掌舵，彷彿走入宮崎駿動畫中的場景。</p>
+        </div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000545/00005608.JPG" alt="北澤浮游選礦場">
+        </div>
+        <div class="text-col">
+            <h2>北澤浮游選礦場</h2>
+            <p>四月的北澤浮游選礦場被新綠喚醒，苔蘚與遺構在陽光下呈現宛如《天空之城》的景色。氣候宜人，適合散步拍照，是佐渡島春季必訪的夢幻取景地。</p>
+        </div>
+    </div>
+
+    <div class="section-bar reveal">路線與行程參考</div>
+    
+    <div class="route-wrap reveal">
+        <div class="route-map">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000389/000396/00005557.PNG" alt="路線圖">
+        </div>
+        <div class="route-text">
+            <div class="day-row">
+                <span class="day-badge">Day 1</span>
+                <p>台北 ✈ 東京成田機場 → 秩父 → 羊山公園賞櫻 & 芝櫻 → 飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 2</span>
+                <p>飯店 → 長瀞川遊船 → 寶登山纜車往復 → 小諸懷古園★日本賞櫻100選 → 飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 3</span>
+                <p>飯店 → 高田城址公園 → 佐渡島★佐渡渡輪 → 吉卜力天空之城～北澤浮游選礦場 → 佐渡溫泉鄉(飯店)</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 4</span>
+                <p>飯店 → 木盆舟體驗 → 真野公園櫻花祭 → 新潟~信濃川安樂堤綠地 → 信濃川萬代橋 → 新潟商店街 → 飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 5</span>
+                <p>飯店 → 船津公園賞櫻 → 鶴城~會津若松城 → 三春瀧櫻 → 飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 6</span>
+                <p>飯店 → 那須千本松牧場 → 國營日立海濱公園 → 成田AEON → 飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 7</span>
+                <p>飯店 → 成田機場 ✈ 台北</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observerCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+    });
+</script>
+
+</body>
+</html>

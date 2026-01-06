@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>秩父蒸汽火車與黑部立山雪牆7日</title>
+<style>
+    /* ================= 全局設定 ================= */
+    :root {
+        /* [修改] 定義草綠色系 */
+        --green-primary: #7CB342;   /* 主草綠色 */
+        --green-dark: #558B2F;      /* 深草綠色 */
+        --green-light: #F1F8E9;     /* 極淺草綠背景 */
+        --badge-color: #7CB342;     /* 標籤用色 (與主色相同) */
+        --text-color: #444;
+    }
+
+    body {
+        font-family: "Microsoft JhengHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.8;
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        overflow-x: hidden;
+    }
+    
+    .container {
+        width: 96%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 0;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0; 
+        transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: transform;
+    }
+
+    h2 {
+        color: var(--green-dark); /* [修改] 改為深草綠色 */
+        font-weight: 700;
+        font-size: 26px;
+        margin-bottom: 20px;
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #DCEDC8; /* [修改] 淺草綠分隔線 */
+        position: relative;
+        padding-left: 15px;
+    }
+    
+    /* 標題左側飾條：草綠色 */
+    h2::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        bottom: 15px;
+        width: 5px;
+        background-color: var(--green-primary); /* [修改] 改為主草綠色 */
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 0.6s ease 0.2s;
+    }
+
+    .reveal.active h2::before {
+        transform: scaleY(1);
+    }
+
+    p {
+        margin-bottom: 1.3em;
+        text-align: justify;
+        font-size: 16px;
+        color: #666;
+        letter-spacing: 0.05em;
+    }
+
+    /* ================= 動態效果 (Scroll Reveal) ================= */
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease-out;
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* 全版主圖 */
+    .hero-banner {
+        width: 96%;
+        max-width: 1200px;
+        margin: 0 auto;
+        height: auto; 
+        display: block;
+        border-radius: 0;
+        animation: fadeIn 1.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* ================= 排版模組 ================= */
+    .feature-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin-bottom: 40px;
+        align-items: center;
+    }
+
+    .feature-row:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .feature-row .img-col {
+        flex: 1 1 50%;
+        position: relative; 
+        box-shadow: none; 
+        border-radius: 0; 
+        overflow: hidden;
+    }
+    
+    .feature-row .img-col:hover img {
+        transform: scale(1.08); 
+    }
+
+    .feature-row .text-col {
+        flex: 1 1 40%;
+        padding: 10px;
+    }
+
+    /* ================= 雙圖並排畫廊 ================= */
+    .gallery-two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .gallery-two .img-box {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0; 
+        box-shadow: none; 
+    }
+    .gallery-two .img-box:hover img {
+        transform: scale(1.08);
+    }
+
+    /* ================= 三欄卡片 (草綠風格) ================= */
+    .lake-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin: 40px 0;
+    }
+    .lake-card {
+        background: #fff;
+        padding: 0;
+        text-align: center;
+        border-radius: 0; 
+        overflow: hidden;
+        box-shadow: none; 
+        border: 1px solid #DCEDC8; /* [修改] 極淺草綠邊框 */
+        transition: border-color 0.3s, transform 0.3s;
+    }
+    
+    .lake-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--green-primary); /* [修改] hover 變主草綠色 */
+    }
+    .lake-card:hover .img-box img {
+        transform: scale(1.05);
+    }
+    .lake-card .img-box { overflow: hidden; }
+
+    .lake-card-content {
+        padding: 20px;
+    }
+
+    .lake-card h3 {
+        color: var(--green-dark); /* [修改] 深草綠色標題 */
+        margin: 0 0 10px 0;
+        font-size: 18px;
+    }
+    .lake-card p {
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    /* ================= 標題條 (草綠漸層) ================= */
+    .section-bar {
+        /* [修改] 草綠色漸層背景 */
+        background: linear-gradient(90deg, var(--green-dark), var(--green-primary));
+        color: #fff;
+        text-align: center;
+        padding: 15px;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 50px auto 30px;
+        letter-spacing: 3px;
+        border-radius: 0; 
+        width: 100%;
+    }
+
+    /* ================= 地圖與行程區塊 (草綠風格) ================= */
+    .route-wrap {
+        display: flex;
+        gap: 50px;
+        margin-bottom: 30px;
+        align-items: center;
+        background-color: var(--green-light); /* [修改] 極淺草綠背景 */
+        padding: 30px;
+        border-radius: 0; 
+        border: 1px solid transparent;
+        transition: border 0.3s;
+        width: 100%; 
+        box-sizing: border-box;
+    }
+    .route-wrap:hover {
+        border: 1px solid #C5E1A5; /* [修改] 淺草綠邊框 */
+    }
+    .route-map { flex: 1.2; }
+    .route-text { flex: 1; }
+    
+    .day-row {
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #C5E1A5; /* [修改] 淺草綠虛線 */
+        padding-bottom: 15px;
+        transition: padding-left 0.3s;
+    }
+    .day-row:hover {
+        padding-left: 10px;
+        background-color: #fff;
+        border-left: 3px solid var(--green-primary); /* [修改] 主草綠色左邊框 */
+    }
+    .day-row:last-child { border-bottom: none; }
+
+    /* Day 標籤：草綠色 */
+    .day-badge {
+        display: inline-block;
+        background: var(--badge-color); /* [修改] 草綠色 */
+        color: #fff;
+        padding: 4px 12px;
+        font-weight: bold;
+        border-radius: 0; 
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    .route-text p {
+        text-align: left;
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    /* ================= RWD 手機版設定 ================= */
+    @media (max-width: 768px) {
+        .container { width: 92%; }
+        .hero-banner { width: 92%; }
+
+        .feature-row { 
+            flex-direction: column !important;
+            gap: 20px; 
+            margin-bottom: 40px;
+        }
+        .feature-row:nth-child(even) {
+            flex-direction: column !important;
+        }
+        .feature-row .img-col, .feature-row .text-col { flex: 1 1 100%; width: 100%; }
+
+        .feature-row .text-col { padding: 10px 0; }
+        .container > p { padding: 0; }
+
+        .gallery-two, .lake-grid, .video-grid, .route-wrap {
+            grid-template-columns: 1fr;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .route-wrap { padding: 20px; }
+        h2 { font-size: 22px; }
+    }
+</style>
+</head>
+<body>
+
+<img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001333/00006032.JPG" alt="秩父與立山黑部" class="hero-banner">
+
+<div class="container">
+
+    <div class="gallery-two reveal">
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005900.JPG" alt="立山風景"></div>
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005901.JPG" alt="黑部湖"></div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005902.JPG" alt="立山室堂">
+        </div>
+        <div class="text-col">
+            <h2>立山室堂．雪之大谷</h2>
+            <p>在海拔 2,450 公尺的立山室堂，是阿爾卑斯路線的最高點。春季開山時，道路兩側堆積的積雪形成壯觀的「雪之大谷」，漫步在兩側高達十多公尺的白色雪牆之間，感受大自然的雄偉與震撼。</p>
+            <p>若天氣晴朗，還能眺望壯麗的立山連峰與蔚藍天空形成的強烈對比，是初夏立山黑部不可錯過的絕景。</p>
+        </div>
+    </div>
+
+    <div class="gallery-two reveal">
+        <div class="img-box">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005904.JPG" alt="立山纜車">
+        </div>
+        <div class="img-box">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005905.JPG" alt="黑部水壩">
+        </div>
+    </div>
+    
+    <div class="reveal">
+        <p>搭乘立山高原纜車與無軌電車穿越群山，視野開闊得像被北阿爾卑斯輕輕抱住。純白山景一路展開，氣勢震撼。抵達黑部水壩後，弧形壩體在雪峰襯托下格外雄偉，湖面泛著淡淡冰色光，是日本最大的拱形水壩工程奇蹟。</p>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005908.JPG" alt="足利花卉公園">
+        </div>
+        <div class="text-col">
+            <h2>足利花卉公園．紫藤花物語</h2>
+            <p>被美國 CNN 評選為世界十大夢幻旅遊景點之一。園內擁有樹齡超過 150 年的大藤，花開時串串紫花垂墜而下，彷彿紫色的瀑布流洩，將夜空染成夢幻的紫色。漫步在長達 80 公尺的白藤隧道中，花香襲人，景色令人屏息。</p>
+        </div>
+    </div>
+
+    <div class="gallery-two reveal">
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005910.JPG" alt="紫藤花"></div>
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005911.JPG" alt="大藤便當"></div>
+    </div>
+    
+    <div class="reveal">
+        <p>在藤花盛開的季節，還能品嚐當地限定的「紫藤花冰淇淋」與特色的「大藤便當」，一邊用餐、一邊被滿棚紫藤包圍，享受最浪漫的春日午後。</p>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001333/00006044.JPG" alt="白川鄉">
+        </div>
+        <div class="text-col">
+            <h2>上高地景區</h2>
+            <p>五月中的上高地，雪峰仍掛著白絮，河童橋下的梓川清澈如藍玉，岸邊新綠剛冒出嫩芽，大正池倒映著山影，春意與殘雪交織出最舒服的季節。散步之餘，來一份可愛的河童燒，外酥內軟的甜味正好替山間涼意添上一口溫度。</p>
+      </div>
+    </div>
+    
+    <div class="gallery-two reveal">
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001333/00006046.JPG" alt="合掌造"></div>
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001333/00006047.JPG" alt="古街"></div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005921.JPG" alt="兼六園">
+        </div>
+        <div class="text-col">
+            <h2>金澤．兼六園</h2>
+            <p>日本三大名園之一，以「宏大、幽邃、人力、蒼古、水泉、眺望」六勝兼備而得名。迴遊式的庭園設計，讓遊客穿梭在池塘、假山與亭台之間，四季皆有不同風情。春末時節，園內的菊櫻與新綠交映，展現出典雅的日式庭園之美。</p>
+        </div>
+    </div>
+
+    <div class="lake-grid reveal">
+        <div class="lake-card">
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001333/00006050.JPG" alt="羊山公園"></div>
+          <div class="lake-card-content">
+            <h3>輕井澤散策&nbsp;</h3>
+              <p>漫步銀座通與靜謐的聖保羅教堂， 森林小鎮散發歐風氣息， 在輕井澤享受悠然的散步時光。</p>
+          </div>
+        </div>
+        <div class="lake-card">
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001333/00006051.JPG" alt="日立海濱公園"></div>
+            <div class="lake-card-content">
+                <h3>高山上三之町</h3>
+                <p>古色木屋與傳統商家，
+排成安靜街景，
+飛驒老街溫暖迷人，
+走進上三之町像回到舊時日本。</p>
+            </div>
+        </div>
+        <div class="lake-card">
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001333/00006052.JPG" alt="SL 蒸汽火車"></div>
+            <div class="lake-card-content">
+                <h3>松本城</h3>
+                <p>黑白城身映照天守之姿，
+歷史沉穩而壯麗。
+跨過紅橋仰望松本城，
+是信州最經典的風景之一。</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001326/00005923.JPG" alt="高山古街">
+        </div>
+        <div class="text-col">
+            <h2>白川合掌村</h2>
+            <p>春末的白川鄉合掌村被鮮嫩新綠包圍，茅草屋在柔和的陽光下顯得特別溫暖而古樸。沿著山村小徑散步，偶爾能遇見遲開的晚櫻、杜鵑或季節花木點綴在屋簷與水田旁，畫面依然清新動人。旅途中還能在合掌屋前品嚐飛驒牛可樂餅、飛驒牛串燒或醬烤糰子（三樣擇一），邊走邊吃的微小幸福，讓四月底的合掌村依舊充滿迷人的春意。</p>
+        </div>
+    </div>
+    </div>
+
+    <div class="section-bar reveal">路線與行程參考</div>
+    <div class="route-wrap reveal">
+        <div class="route-map">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000009/000014/000827/001285/001286/00005526.PNG" alt="路線圖">
+        </div>
+        <div class="route-text">
+            <div class="day-row">
+                <span class="day-badge">Day 1</span>
+                <p>台北 ✈ 東京成田機場 → 住宿飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 2</span>
+                <p>住宿飯店 → 栃木縣足利市藤花公園 → 輕井澤～聖保羅教堂～浪漫銀座通 → 住宿飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 3</span>
+                <p>住宿飯店 → 立山黑部阿爾卑斯之路 → 住宿飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 4</span>
+                <p>住宿飯店 → 兼六園~日本三名園之一 → 白川鄉合掌聚落 → 高山上三之町古町 → 住宿飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 5</span>
+                <p>住宿飯店 → 上高地 → 大正池 → 河童橋 → 松本城 → 住宿飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 6</span>
+                <p>住宿飯店 → 長瀞川遊船 → 寶登山纜車 → 秩父鐵道★長瀞車站┅┅蒸汽火車 Paleo Express┅┅熊谷 → 住宿飯店</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 7</span>
+                <p>住宿飯店 → 成田機場✈桃園</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observerCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+    });
+</script>
+
+</body>
+</html>

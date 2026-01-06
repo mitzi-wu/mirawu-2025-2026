@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>紐西蘭南島極光．南北島縱橫12日</title>
+<style>
+    /* ================= 全局設定 ================= */
+    body {
+        font-family: "Microsoft JhengHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.8;
+        color: #444;
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        overflow-x: hidden;
+    }
+    
+    .container {
+        width: 96%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 0;
+    }
+
+    /* [修改] 圖片通用設定：強制直角，移除圓角 */
+    img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0 !important; /* 強制移除圓角 */
+        transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+        will-change: transform;
+    }
+
+    /* 標題樣式 (滑入動態) */
+    h2 {
+        color: #2FAEA6; 
+        font-weight: 700;
+        font-size: 26px;
+        margin-bottom: 20px;
+        margin-top: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 20px;
+        
+        /* 初始狀態 */
+        opacity: 0; 
+        transform: translateX(-30px);
+        transition: all 0.8s ease-out 0.2s;
+    }
+    
+    /* 標題進場後 */
+    .reveal.active h2 {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    /* 粉紅飾條動態生長效果 */
+    h2::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        bottom: 15px;
+        width: 5px;
+        background-color: #2FAEA6;
+        transform: scaleY(0);
+        transform-origin: bottom;
+        transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+    }
+
+    .reveal.active h2::before {
+        transform: scaleY(1);
+    }
+
+    /* 內文樣式 (上浮動態) */
+    p {
+        margin-bottom: 1.3em;
+        text-align: justify;
+        font-size: 16px;
+        color: #666;
+        letter-spacing: 0.05em;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out 0.3s;
+    }
+
+    .reveal.active p {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* ================= 捲動偵測容器 (Scroll Reveal) ================= */
+    .reveal {
+        opacity: 0;
+        transition: opacity 1s ease-out;
+    }
+    .reveal.active {
+        opacity: 1;
+    }
+
+    /* 全版主圖 Zoom-out 進場動畫 */
+    .hero-banner-wrap {
+        overflow: hidden;
+        margin-bottom: 40px;
+    }
+    .hero-banner {
+        width: 100%; /* 確保滿版 */
+        animation: zoomOutEnter 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes zoomOutEnter {
+        from { transform: scale(1.1); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    /* ================= 排版模組 (Zig-Zag) ================= */
+    .feature-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin-bottom: 60px;
+        align-items: center;
+    }
+
+    .feature-row:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .feature-row .img-col {
+        flex: 1 1 50%;
+        position: relative; 
+        box-shadow: none; 
+        border-radius: 0; 
+        overflow: hidden;
+        
+        /* 圖片區塊進場 */
+        opacity: 0;
+        transform: scale(0.95);
+        transition: all 1s ease-out;
+    }
+    
+    .feature-row.active .img-col {
+        opacity: 1;
+        transform: scale(1);
+    }
+    
+    /* [新增] 滑鼠懸停時，圖片更明顯的動態 */
+    .feature-row .img-col:hover img {
+        transform: scale(1.15); 
+        filter: brightness(1.1);
+    }
+
+    .feature-row .text-col {
+        flex: 1 1 40%;
+        padding: 10px;
+    }
+
+    /* ================= 雙圖並排畫廊 ================= */
+    .gallery-two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    .gallery-two .img-box {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0; 
+        
+        /* 雙圖進場 */
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease-out;
+    }
+    
+    .gallery-two.active .img-box:nth-child(1) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.1s;
+    }
+    .gallery-two.active .img-box:nth-child(2) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.3s;
+    }
+
+    .gallery-two .img-box:hover img {
+        transform: scale(1.1);
+    }
+
+    /* ================= 極光資訊卡 (3D 翻轉 + 極光流動背景) ================= */
+    .info-card {
+        /* [新增] 極光漸層背景動畫 */
+        background: linear-gradient(120deg, #f0fcfb, #e0f7fa, #f0fcfb);
+        background-size: 200% 200%;
+        animation: aurora-flow 5s ease infinite;
+        
+        border-left: 5px solid #2FAEA6;
+        padding: 30px;
+        margin: 50px 0;
+        border-radius: 0; /* 直角 */
+        box-shadow: 0 10px 30px rgba(47, 174, 166, 0.15);
+        
+        /* 3D 翻轉進場 */
+        transform: perspective(1000px) rotateX(15deg);
+        opacity: 0;
+        transition: all 0.8s ease-out;
+        transform-origin: top center;
+    }
+    
+    @keyframes aurora-flow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .info-card.active {
+        transform: perspective(1000px) rotateX(0deg);
+        opacity: 1;
+    }
+
+    .info-card h3 {
+        color: #2FAEA6;
+        margin-top: 0;
+        font-size: 22px;
+        text-align: center;
+        letter-spacing: 2px;
+    }
+    .info-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .info-card li {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 12px;
+        color: #555;
+        opacity: 0;
+        transform: translateX(-15px);
+        transition: all 0.5s ease-out;
+    }
+    
+    .info-card.active li:nth-child(1) { transition-delay: 0.2s; opacity: 1; transform: translateX(0); }
+    .info-card.active li:nth-child(2) { transition-delay: 0.3s; opacity: 1; transform: translateX(0); }
+    .info-card.active li:nth-child(3) { transition-delay: 0.4s; opacity: 1; transform: translateX(0); }
+    .info-card.active li:nth-child(4) { transition-delay: 0.5s; opacity: 1; transform: translateX(0); }
+
+    .info-card li::before {
+        content: '★';
+        color: #2FAEA6;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    /* ================= 標題條 (增強動態) ================= */
+    .section-bar {
+        background: linear-gradient(90deg, #2FAEA6, #5ABEB7, #2FAEA6);
+        background-size: 200% 100%;
+        color: #fff;
+        text-align: center;
+        padding: 15px;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 60px 0 40px;
+        letter-spacing: 3px;
+        border-radius: 0; 
+        position: relative;
+        overflow: hidden;
+        /* [新增] 背景緩慢流動 */
+        animation: gradient-shift 5s linear infinite; 
+    }
+    
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    .section-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: shimmer 2.5s infinite; /* 加快閃光速度 */
+    }
+    
+    @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    /* ================= 行程地圖區塊 (寬度調整與互動) ================= */
+    .route-wrap {
+        display: flex;
+        gap: 40px;
+        margin-bottom: 40px;
+        align-items: flex-start; 
+        background-color: #f9f9f9;
+        /* [修改] 減少左右 padding，讓地圖更寬，視覺上更對齊上方圖片 */
+        padding: 30px 15px; 
+        border-radius: 0; 
+        border: 1px solid transparent;
+        transition: all 0.4s ease;
+    }
+    .route-wrap:hover {
+        background-color: #fff;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1); /* 加強陰影 */
+        transform: translateY(-5px);
+    }
+    
+    .route-map { 
+        flex: 1.3; /* [修改] 增加地圖的寬度佔比 */
+    } 
+    .route-text { 
+        flex: 1; 
+    }
+    
+    .day-row {
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #ddd;
+        padding-bottom: 15px;
+        padding-left: 10px;
+        border-left: 3px solid transparent;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: default;
+    }
+    /* [新增] 滑鼠移過去某一天，向右滑動效果 */
+    .day-row:hover {
+        padding-left: 25px; /* 滑動距離增加 */
+        background-color: #f0fcfb; /* 極淡的綠色背景 */
+        border-left: 3px solid #2FAEA6;
+        box-shadow: 0 3px 15px rgba(47, 174, 166, 0.15);
+    }
+    .day-row:last-child { border-bottom: none; }
+
+    .day-badge {
+        display: inline-block;
+        background: #2FAEA6;
+        color: #fff;
+        padding: 4px 12px;
+        font-weight: bold;
+        border-radius: 0; 
+        font-size: 13px;
+        margin-bottom: 8px;
+        transition: transform 0.3s;
+    }
+    /* [新增] Badge 脈衝效果 */
+    .day-row:hover .day-badge {
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .route-text p {
+        text-align: left;
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+        opacity: 1; 
+        transform: none;
+    }
+
+    /* [新增] 地圖 Icon 懸浮飄動動畫 */
+    .map-icons {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin: 40px 0;
+    }
+    .map-icons img { 
+        width: auto; height: 60px; object-fit: contain; 
+        border-radius: 0 !important;
+        animation: float-icon 3s ease-in-out infinite;
+    }
+    
+    /* 讓不同的 Icon 錯開飄動時間 */
+    .map-icons img:nth-child(1) { animation-delay: 0s; }
+    .map-icons img:nth-child(2) { animation-delay: 0.5s; }
+    .map-icons img:nth-child(3) { animation-delay: 1s; }
+
+    @keyframes float-icon {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .map-icons img:hover {
+        animation-play-state: paused; /* 滑鼠懸停時暫停飄動 */
+        transform: scale(1.2) rotate(5deg);
+        transition: transform 0.3s;
+    }
+
+    /* ================= RWD 手機版設定 ================= */
+    @media (max-width: 768px) {
+        .container { width: 92%; }
+        .hero-banner { width: 92%; }
+
+        .feature-row { 
+            flex-direction: column !important;
+            gap: 20px; 
+            margin-bottom: 50px;
+        }
+        .feature-row:nth-child(even) {
+            flex-direction: column !important;
+        }
+        .feature-row .img-col, .feature-row .text-col { flex: 1 1 100%; width: 100%; }
+
+        .feature-row .text-col { padding: 10px 0; }
+        .container > p { padding: 0; }
+
+        .gallery-two, .video-grid, .route-wrap {
+            grid-template-columns: 1fr;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .route-wrap { padding: 20px; }
+        .map-icons { flex-wrap: wrap; }
+        .map-icons img { height: 50px; }
+        h2 { font-size: 22px; }
+        
+        /* 手機版簡化動畫 */
+        h2, p { transition: opacity 0.5s; transform: none; opacity: 1; }
+        .feature-row .img-col { transform: none; opacity: 1; }
+        .info-card { transform: none; opacity: 1; }
+        .info-card li { transform: none; opacity: 1; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div style="text-align: center; margin-bottom: 30px;" class="reveal">
+        <span style="color:#5ABEB7; font-size:24px; font-weight:bold; letter-spacing: 2px; border-bottom: 2px solid #5ABEB7; padding-bottom: 5px;">紐西蘭極光專機．南島深度12日</span>
+    </div>
+    
+    <div class="hero-banner-wrap">
+        <div class="gallery-two reveal">
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/001321/00005842.JPG" alt="紐西蘭極光"></div>
+            <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/001321/00005841.JPG" alt="南極光"></div>
+        </div>
+    </div>
+
+    <div class="reveal">
+        <p style="font-size: 18px; line-height: 2;">2024至2026年是太陽黑子活動的極大期，這意味著我們將迎來觀賞「南極光 (Aurora Australis)」的最佳時機。紐西蘭南島，特別是蒂卡波湖與斯圖爾特島周邊，因光害極低且緯度適中，成為全球追逐極光的夢幻聖地。當夜空中舞動著粉紅與鮮綠的光帶，那份來自宇宙的震撼將成為您一生難忘的回憶。</p>
+    </div>
+
+    <div class="info-card reveal">
+        <h3>✦ 極光觀測指南 ✦</h3>
+        <ul>
+            <li><strong>最佳觀測季節：</strong>每年 4 月至 9 月（南半球秋冬季）。</li>
+            <li><strong>觀測條件：</strong>Kp值（極光指數）需達 4 以上，且天氣晴朗無雲。</li>
+            <li><strong>觀測地點：</strong>紐西蘭南島南部，無光害的開闊地區（如蒂卡波、因弗卡吉爾）。</li>
+            <li><strong>科技輔助：</strong>建議下載 <em>Aurora Forecast</em> App，隨時掌握極光爆發機率。</li>
+        </ul>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000130/000137/00000297.JPG" alt="約翰山天文台">
+        </div>
+        <div class="text-col">
+            <h2>米佛峽灣遊船 — 海上巡航</h2>
+            <p>『為您安排體驗紐西蘭必遊景點』『世界自然遺產-峽灣國家公園之旅-米佛峽灣巡航』 佔地達250萬公頃的峽灣國家公園，米佛小徑與是世上最美的公路之一， 獨特的冷溫帶雨林和冰河地型讓峽灣一年四季都充滿奇異， 米佛峽灣遊船欣賞獨特的冰河遺跡和大自然的鬼斧神工。》</p>
+        </div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000897/00002861.JPG" alt="好牧羊人教堂">
+        </div>
+        <div class="text-col">
+            <h2>感受第卡波湖風光＋牧羊人教堂</h2>
+            <p>寧靜的第卡波湖畔，彷彿一池牛奶跟藍天調了色， 乳藍湖水好似人間仙境， 這座石塊打造的小教堂是早期來到 Mackenzie Country 麥肯錫地區開墾的牧羊人家宗教信仰中心。</p>
+        </div>
+    </div>
+
+    <div class="gallery-two reveal">
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000890/00002829.JPG" alt="米佛峽灣1"></div>
+        <div class="img-box"><img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000890/00002830.JPG" alt="米佛峽灣2"></div>
+    </div>
+
+    <div class="content-box reveal">
+        <h2 style="text-align: center;">皇后鎮必訪地標：Skyline 天際纜車</h2>
+        <p>想要將皇后鎮的湖光山色盡收眼底？搭乘 Skyline 纜車直達鮑伯峰絕對是您的首選！這座平均傾斜度 37.1 度的纜車，能帶您輕鬆抵達海拔 790 公尺的最佳觀景點。站在這裡，蜿蜒的瓦卡蒂普湖與巍峨的卓越山脈交織成一幅壯闊山水畫，讓您不費吹灰之力，就能拍出令人羨慕的絕世美照。</p>
+  </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000892/00002838.JPG" alt="蒂阿瑙">
+        </div>
+        <div class="text-col">
+            <h2>南島第一大湖．蒂阿瑙</h2>
+            <p>蒂阿瑙湖（Lake Te Anau）是前往米佛峽灣的門戶，也是南島最大的冰川湖。這裡最著名的活動是搭船前往幽靜的洞穴，欣賞如滿天星斗般的「藍光螢火蟲（Glowworms）」。在黑暗的地下河流中，點點藍光閃爍，彷彿置身奇幻世界。</p>
+        </div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000895/00002847.JPG" alt="皇后鎮纜車">
+        </div>
+        <div class="text-col">
+            <h2>天際纜車 SKYLINE GONDOLA</h2>
+            <p>登山纜車緩緩爬上山頂，此時你可親自從空中鳥瞰皇后鎮的美麗景色而忘記了纜車已越升越高恐懼！ 登上山頂後，在戶外的廣角的眺望台，是您遠眺瓦卡第普湖和壯觀的 THE REMARKABLES 山美景的最佳地點。</p>
+        </div>
+    </div>
+
+    <div class="feature-row reveal">
+        <div class="img-col">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000899/00002875.JPG" alt="奧克蘭天空塔">
+        </div>
+        <div class="text-col">
+            <h2>北島地標．奧克蘭天空塔</h2>
+            <p>位於北島奧克蘭市中心的天空塔（Sky Tower），高 328 公尺，是南半球最高的獨立建築物。登上觀景台，可以 360 度俯瞰奧克蘭的港灣美景與城市風光，是紐西蘭繁華都市的最佳代表。</p>
+        </div>
+    </div>
+
+
+    <div class="section-bar reveal">路線與行程參考</div>
+    
+    <div class="route-wrap reveal">
+        <div class="route-map">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000885/00005869.PNG" alt="南島路線圖">
+        </div>
+        <div class="route-text">
+            <div class="day-row">
+                <span class="day-badge">Day 1</span>
+                <p>桃園國際機場 ✈ 奧克蘭</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 2</span>
+                <p>奧克蘭 ✈ 但尼丁DUNEDIN~市區觀光</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 3</span>
+                <p>蘇格蘭風建築城市但尼丁~ 拉納克城堡 ~ 懷舊古董火車 峽谷鐵道之旅 → 因弗卡吉爾INVERCARGILL ~ 世界最南星巴克</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 4</span>
+                <p>因弗卡吉爾 → 斯圖爾特島一日遊 → 因弗卡吉爾</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 5</span>
+                <p>因弗卡吉爾 → 峽灣國家公園區｜米佛峽灣遊船海上巡航—第阿納｜活性鐘乳石洞＆螢火蟲生態之旅</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 6</span>
+                <p>第阿納 → 魔戒小鎮秘境｜格萊諾基Glenorchy Lagoon Walkway (潟湖步道健行) → 皇后鎮~SKYLINE纜車</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 7</span>
+                <p>皇后鎮—箭鎮｜吉布斯頓酒莊酒窖之旅Gibbston Vally Winery Tour → 高山鮭魚農場 High Country Salmon → 第卡波LAKE TEKAPO星空保護區</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 8</span>
+                <p>蒂卡波湖｜牧羊人教堂 → 坎特柏里平原 艾須柏頓ASHBURTON → 基督城市區觀光</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="route-wrap reveal">
+        <div class="route-map">
+            <img src="https://lottotour.voyage.com.tw/eWeb_lottotour/IMGDB/000001/000129/000883/000885/00005868.PNG" alt="北島路線圖">
+        </div>
+        <div class="route-text">
+            <div class="day-row">
+                <span class="day-badge">Day 9</span>
+                <p>基督城CHRISTCHURCH✈ 奧克蘭 → 德文港</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 10</span>
+                <p>藍泉秘境 (Blue Spring, Putaruru)→ 羅吐魯阿【愛歌頓牧場、毛利原住民文化村、毛利歌舞音樂會、毛利風味餐】</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 11</span>
+                <p>羅吐魯阿 → 瑪塔瑪塔哈比村 → 奥克蘭【市區觀光】→ 天空之塔Sky Tower</p>
+            </div>
+            <div class="day-row">
+                <span class="day-badge">Day 12</span>
+                <p>奧克蘭 ✈ 桃園國際機場</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 // 當 15% 出現時觸發
+        };
+
+        const observerCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+    });
+</script>
+
+</body>
+</html>
