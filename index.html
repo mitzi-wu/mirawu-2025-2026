@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mira Wu-2025-2026 DESIGN</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <script src="js/modernizr.js"></script>
+
+    <style>
+      /* =========================================
+          [修正] 全局平滑滾動 & 錨點定位修正
+      ========================================= */
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 100px; 
+      }
+
+      /* =========================================
+          1. Web Design 樣式調整
+      ========================================= */
+      .pagination-frame {
+        padding: 8px 20px;
+        margin-top: 30px;
+      }
+      .web-design-pagination .swiper-pagination-bullet {
+        background-color: #a0a0a0;
+        opacity: 0.5;
+        width: 10px;
+        height: 10px;
+        margin: 0 6px !important;
+      }
+      .web-design-pagination .swiper-pagination-bullet-active {
+        opacity: 1;
+        background-color: #333333;
+      }
+
+      /* =========================================
+          2. Lightbox 燈箱 (Graphic Design)
+      ========================================= */
+      .lightbox-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(233, 224, 210, 0.95);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .lightbox-content {
+        display: block;
+        max-width: 90%;
+        max-height: 90vh;
+        width: auto;
+        height: auto;
+        border: 4px solid #fff;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        animation-name: zoom;
+        animation-duration: 0.3s;
+      }
+      .close-lightbox {
+        position: absolute;
+        top: 20px;
+        right: 40px;
+        color: #5a5a5a;
+        font-size: 50px;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        z-index: 10000;
+        line-height: 1;
+      }
+      .close-lightbox:hover { color: #000; }
+      #featured-products .image-holder img {
+        cursor: zoom-in;
+        transition: transform 0.3s ease;
+      }
+      #featured-products .image-holder img:hover {
+        transform: scale(1.02);
+      }
+      @keyframes zoom {
+        from {transform:scale(0.8); opacity: 0;}
+        to {transform:scale(1); opacity: 1;}
+      }
+
+      /* =========================================
+          3. 影片輪播 (Reels & Landscape)
+      ========================================= */
+      .carousel-wrapper {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0; 
+        box-sizing: border-box;
+      }
+      .fade-mask {
+        width: 100%;
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0%, black 2%, black 98%, transparent 100%);
+      }
+      .scroll-track {
+        display: flex;
+        overflow-x: auto;
+        gap: 20px; 
+        scroll-snap-type: x mandatory;
+
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+        padding-bottom: 20px;
+        padding-top: 10px;
+      }
+      .scroll-track::-webkit-scrollbar { display: none; }
+       
+      .reels-track { padding: 10px 5px; height: 640px; }
+      .reel-card {
+        flex: 0 0 350px;
+        height: 622px; 
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden; 
+        position: relative; 
+        scroll-snap-align: center; 
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      }
+      .reel-card iframe {
+        position: absolute; top: 50%; left: 50%; width: 102%; height: 102%;
+        transform: translate(-50%, -50%); border: none; display: block;
+      }
+      .landscape-track { padding: 10px 5px; height: 320px; }
+      .landscape-card {
+        flex: 0 0 500px;
+        height: 281px;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative; 
+        scroll-snap-align: start;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        background: #fff;
+      }
+      .landscape-card iframe {
+        position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
+        transform: translate(-50%, -50%); border: none;
+      }
+
+      .nav-btn {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        width: 50px; height: 50px; border-radius: 50%;
+        background-color: #fff; border: 1px solid #EAEAEA;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer;
+        z-index: 10; display: flex; align-items: center; justify-content: center;
+        font-size: 20px; color: #333; transition: all 0.3s ease;
+      }
+      .nav-btn:hover { background-color: #C19F78; color: white; border-color: #C19F78; }
+      .prev-btn { left: -20px; }
+      .next-btn { right: -20px; }
+
+      @media (max-width: 768px) {
+        .nav-btn { 
+            display: flex; 
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .prev-btn { left: 5px; } 
+        .next-btn { right: 5px; }
+        .reels-track { height: 550px; gap: 15px; }
+        .reel-card { flex: 0 0 300px; height: 533px; }
+        .landscape-track { height: 220px; gap: 15px; }
+        .landscape-card { flex: 0 0 320px; height: 180px; }
+      }
+
+      /* =========================================
+          4. Go Top 按鈕 (固定右下角，圓形)
+      ========================================= */
+      #back-to-top {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999;
+        font-size: 12px; 
+        font-weight: bold;
+        border: none;
+        outline: none;
+        background-color: #333;
+        color: white;
+        cursor: pointer;
+        /* 圓形設定 */
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        text-transform: uppercase;
+        letter-spacing: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      }
+      #back-to-top:hover {
+        background-color: #C19F78;
+        transform: translateY(-5px);
+      }
+    </style>
+  </head>
+  <body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" tabindex="0">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="currentColor" d="M19 3C13.488 3 9 7.488 9 13c0 2.395.84 4.59 2.25 6.313L3.281 27.28l1.439 1.44l7.968-7.969A9.922 9.922 0 0 0 19 23c5.512 0 10-4.488 10-10S24.512 3 19 3zm0 2c4.43 0 8 3.57 8 8s-3.57 8-8 8s-8-3.57-8-8s3.57-8 8-8z" /></symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="user" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" /></symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="cart" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" /></symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="arrow-left" viewBox="0 0 32 32"><path fill="currentColor" d="m13.281 6.781l-8.5 8.5l-.687.719l.687.719l8.5 8.5l1.438-1.438L7.938 17H28v-2H7.937l6.782-6.781z" /></symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="arrow-right" viewBox="0 0 32 32"><path fill="currentColor" d="M18.719 6.781L17.28 8.22L24.063 15H4v2h20.063l-6.782 6.781l1.438 1.438l8.5-8.5l.687-.719l-.687-.719z" /></symbol>
+      
+      <symbol xmlns="http://www.w3.org/2000/svg" id="pencil" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M25.7 6.3l-3-3a2 2 0 0 0-2.8 0L3.5 19.7 2 28l8.3-1.5L26.7 10a2 2 0 0 0 0-2.8zM5.5 20.3L19 6.8 23.2 11 9.7 24.5 5.5 20.3z"/>
+      </symbol>
+
+      <symbol xmlns="http://www.w3.org/2000/svg" id="gift" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M26 8H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm0 16H6V10h20v14z"/>
+        <path fill="currentColor" d="M15 10h2v14h-2z"/>
+        <path fill="currentColor" d="M6 16h20v2H6z"/>
+        <path fill="currentColor" d="M16 8a3 3 0 0 0-3-3c-1.654 0-3 1.346-3 3s1.346 3 3 3h3V8zm-3-1a1 1 0 0 1 1 1v1h-1c-.551 0-1-.449-1-1s.449-1 1-1z"/>
+        <path fill="currentColor" d="M16 8v3h3c1.654 0 3-1.346 3-3s-1.346-3-3-3a3 3 0 0 0-3 3zm3-1c.551 0 1 .449 1 1s-.449 1-1 1h-1V7h1z"/>
+      </symbol>
+
+      <symbol xmlns="http://www.w3.org/2000/svg" id="computer" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M28 6H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10v4H9v2h14v-2h-5v-4h10a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm0 16H4V8h24v14z"/>
+      </symbol>
+
+      <symbol xmlns="http://www.w3.org/2000/svg" id="notebook" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M23 4H9a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 22H9V6h14v20z"/>
+        <path fill="currentColor" d="M11 10h10v2H11z"/>
+        <path fill="currentColor" d="M11 14h10v2H11z"/>
+        <path fill="currentColor" d="M11 18h10v2H11z"/>
+      </symbol>
+
+      <symbol xmlns="http://www.w3.org/2000/svg" id="quote" viewBox="0 0 24 24"><path fill="currentColor" d="m15 17l2-4h-4V6h7v7l-2 4h-3Zm-9 0l2-4H4V6h7v7l-2 4H6Z" /></symbol>         
+      <symbol xmlns="http://www.w3.org/2000/svg" id="nav-icon" viewBox="0 0 16 16"><path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" /></symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="close" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" /></symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="navbar-icon" viewBox="0 0 16 16"><path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" /></symbol>
+    </svg>
+
+    <div id="preloader">
+      <span class="loader">
+        <span class="loader-inner"></span>
+      </span>
+    </div>
+
+    <header id="header" class="site-header text-black">
+      <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="index.html">
+            <img src="images/main-logo.png" class="logo">
+          </a>
+          <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <svg class="navbar-icon" width="50" height="50">
+              <use xlink:href="#navbar-icon"></use>
+            </svg>
+          </button>
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
+            <div class="offcanvas-header px-4 pb-0">
+              <a class="navbar-brand" href="index.html">
+                <img src="images/main-logo.png" class="logo">
+              </a>
+              <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul id="navbar" class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="#about-us">About Me</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="#featured-products">Graphic Design</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="#collections">Web Design</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="#trending-products">Reels</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="#latest-blog">Trending Videos</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>    
+    </header>
+
+    <section id="billboard" class="overflow-hidden">
+      <div class="swiper main-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="banner-item" style="background-image: url(images/banner-image1.jpg); background-repeat: no-repeat; background-position: right; height: 682px;">
+                    <div class="banner-content padding-large">
+                      <h1 class="display-1 text-uppercase text-dark pb-2">Portfolio 2025</h1>
+                      <p>Graphic Design & Social Media Marketing</p>                      
+                      <a href="#about-us" class="btn btn-medium btn-arrow position-relative mt-5">
+                        <span class="text-uppercase">Read More</span>            
+                        <svg class="arrow-right position-absolute" width="18" height="20">
+                          <use xlink:href="#arrow-right"></use>
+                        </svg>
+                      </a>    
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="company-services" class="padding-large">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 pb-3">
+            <div class="icon-box d-flex align-items-center">
+              <div class="icon-box-icon pt-3 pe-3 pb-3 ps-3">
+                <svg class="pencil">
+                  <use xlink:href="#pencil" />
+                </svg>
+              </div>
+              <div class="icon-box-content ps-3">
+                <h3 class="card-title text-uppercase text-dark">Visual & Publication Design</h3>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 pb-3">
+            <div class="icon-box d-flex align-items-center">
+              <div class="icon-box-icon pt-3 pe-3 pb-3 ps-3">
+                <svg class="gift">
+                  <use xlink:href="#gift" />
+                </svg>
+              </div>
+              <div class="icon-box-content ps-3">
+                <h3 class="card-title text-uppercase text-dark">Packaging & Display Design</h3>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 pb-3">
+            <div class="icon-box d-flex align-items-center">
+              <div class="icon-box-icon pt-3 pe-3 pb-3 ps-3">
+                <svg class="computer">
+                  <use xlink:href="#computer" />
+                </svg>
+              </div>
+              <div class="icon-box-content ps-3">
+                <h3 class="card-title text-uppercase text-dark">Multimedia & Digital Management</h3>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6 pb-3">
+            <div class="icon-box d-flex align-items-center">
+              <div class="icon-box-icon pt-3 pe-3 pb-3 ps-3">
+                <svg class="notebook">
+                  <use xlink:href="#notebook" />
+                </svg>
+              </div>
+              <div class="icon-box-content ps-3">
+                <h3 class="card-title text-uppercase text-dark">Process & Admin Management</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about-us">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-between g-5">
+          <div class="col-lg-6">
+            <div class="image-holder mb-4 jarallax">
+                <img src="images/single-image1.jpg" alt="single" class="img-fluid jarallax-img">
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="detail p-5">
+              <div class="display-header">
+                <h2 class="display-2 text-uppercase text-dark pb-2">About Me</h2>
+                <p class="pb-3">「設計不僅是工作，更是我的興趣。我有豐富的平面設計經驗，特別喜愛在書籍編排、包裝與插畫中發揮創意，風格彈性多變。</p>
+                <p>為了讓視覺表現更有趣，我也自學了短影音剪輯與網頁維護，希望能讓創意從平面延伸到動態。我個性隨和、好溝通且樂於學習新事物，能快速融入團隊節奏。希望能將這份對設計的熱忱帶入貴公司，一起創造出溫暖又精彩的作品。」 </p>
+                
+                <a href="https://mitzi-wu.github.io/mitzi.wu.github.io/mitzi/" target="_blank" class="btn btn-medium btn-arrow outline-dark position-relative mt-3 me-3">
+                  <span class="text-uppercase">2012-2023 Design</span>            
+                  <svg class="arrow-right position-absolute" width="18" height="20">
+                    <use xlink:href="#arrow-right"></use>
+                </svg>
+                </a>
+
+                <a href="https://mitzi-wu.github.io/A-FRESH-START_mitzi/A%20FRESH%20START_mitzi/index.html" target="_blank" class="btn btn-medium btn-arrow outline-dark position-relative mt-3">
+                  <span class="text-uppercase">2023-2024 Design</span>            
+                  <svg class="arrow-right position-absolute" width="18" height="20">
+                    <use xlink:href="#arrow-right"></use>
+                  </svg>
+                </a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="featured-products" class="product-store position-relative padding-large">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="display-header pb-3 d-flex justify-content-between flex-wrap col-md-12">
+            <h2 class="display-2 text-dark text-uppercase">Graphic Design</h2> 
+            <a href="shop.html" class="btn btn-medium btn-arrow btn-normal position-relative">
+              <span class="text-uppercase">Shop All</span>            
+              <svg class="arrow-right position-absolute" width="18" height="20">
+                <use xlink:href="#arrow-right"></use>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div id="featured-swiper" class="product-swiper col-md-12">
+            <div class="swiper">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                  <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                    <div class="image-holder">
+                      <img src="images/product-item1.jpg" alt="product-item" class="product-image img-fluid zoomable-image">
+                    </div>
+                    <div class="cart-concern">
+                      <h3 class="card-title text-uppercase pt-3 text-primary">
+                        <a href="single-product.html" class="text-primary">禮品小卡</a>
+                      </h3>
+                      <div class="cart-info">
+                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART"><span>莫內花園主題</span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                    <div class="image-holder">
+                      <img src="images/product-item2.jpg" alt="product-item" class="product-image img-fluid zoomable-image">
+                    </div>
+                    <div class="cart-concern">
+                      <h3 class="card-title text-uppercase pt-3 text-primary">
+                        <a href="single-product.html" class="text-primary">目錄封面</a>
+                      </h3>
+                      <div class="cart-info">
+                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART">
+                          <span>為崇她社作設計</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                    <div class="image-holder">
+                      <img src="images/product-item3.jpg" alt="product-item" class="product-image img-fluid zoomable-image">
+                    </div>
+                    <div class="cart-concern">
+                      <h3 class="card-title text-uppercase pt-3 text-primary">
+                        <a href="single-product.html" class="text-primary">禮品小卡</a>
+                      </h3>
+                      <div class="cart-info">
+                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART">
+                          <span>溫馨致謝</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                    <div class="image-holder">
+                      <img src="images/product-item4.jpg" alt="product-item" class="product-image img-fluid zoomable-image">
+                    </div>
+                    <div class="cart-concern">
+                      <h3 class="card-title text-uppercase pt-3 text-primary">
+                        <a href="single-product.html" class="text-primary">DM設計</a>
+                      </h3>
+                      <div class="cart-info">
+                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART">
+                          <span>粿蒸食品蛋捲系列</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                    <div class="image-holder">
+                      <img src="images/product-item10.jpg" alt="product-item" class="product-image img-fluid zoomable-image">
+                    </div>
+                    <div class="cart-concern">
+                      <h3 class="card-title text-uppercase pt-3 text-primary">
+                        <a href="single-product.html" class="text-primary">聖誕版面</a>
+                      </h3>
+                      <div class="cart-info">
+                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART">
+                          <span>以此版面製作、包裝紙、禮盒、貼紙</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="product-card image-zoom-effect link-effect d-flex flex-wrap">
+                    <div class="image-holder">
+                      <img src="images/product-item11.jpg" alt="product-item" class="product-image img-fluid zoomable-image">
+                    </div>
+                    <div class="cart-concern">
+                      <h3 class="card-title text-uppercase pt-3 text-primary">
+                        <a href="single-product.html" class="text-primary">場景擺設與攝影</a>
+                      </h3>
+                      <div class="cart-info">
+                        <a class="pseudo-text-effect" href="#" data-after="ADD TO CART">
+                          <span>營造商品氛圍製作目錄照片</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-pagination text-center mt-5"></div>
+          </div>
+        </div>
+      </div>      
+    </section>
+
+    <section id="testimonials" class="position-relative">
+      <div class="container">
+        <div class="row">
+          <div class="review-content position-relative">
+            <div class="swiper-icon swiper-arrow swiper-arrow-prev position-absolute d-flex align-items-center justify-content-center">
+              <svg class="icon-arrow" width="25" height="25">
+                <use xlink:href="#arrow-left" />
+              </svg>
+            </div>
+            <div class="swiper testimonial-swiper">
+              <div class="quotation text-center">
+                <svg class="quote">
+                  <use xlink:href="#quote" />
+                </svg>
+              </div>
+              <div class="swiper-wrapper">
+                <div class="swiper-slide text-center d-flex justify-content-center">
+                  <div class="review-item col-md-10">
+                    <i class="icon icon-review"></i>
+                    <blockquote class="fs-4">2023-2025上半年｜荷包袋（光芒國際） <br>
+                    在職期間得到春季專案的管理職，強化團隊領導與跨部門溝通能力。工作重點在於設計結合市場趨勢，<br>
+                    透過主導熱銷商品包裝、攝影與陳列設計，成功將視覺創意轉化為推動銷售的實質商業價值。</blockquote>
+                    <div class="author-detail">
+                      <div class="name text-primary text-uppercase pt-2"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="swiper-slide text-center d-flex justify-content-center">
+                  <div class="review-item col-md-10">
+                    <i class="icon icon-review"></i>
+                    <blockquote class="fs-4">2025下半年｜樂透旅行社<br> 
+						將平面設計優勢延伸至數位領域。除了統籌旅遊手冊與CIS視覺規範，我更跨足FB/IG短影音<br>製作及網頁美化，成功整合靜態設計與動態行銷，為品牌在數位社群上建立更具活力與專業的形象。</blockquote>
+                    <div class="author-detail">
+                      <div class="name text-primary text-uppercase pt-2"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-icon swiper-arrow swiper-arrow-next position-absolute d-flex align-items-center justify-content-center">
+              <svg class="icon-arrow" width="25" height="25">
+                <use xlink:href="#arrow-right" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>      
+      <div class="swiper-pagination text-center position-absolute"></div>
+    </section>
+
+    <section id="collections" class="position-relative padding-large" style="padding-top: 50px;">
+      <div class="container-fluid">
+        <div class="row mb-5 align-items-center" style="margin-top: 80px;">
+            <div class="col-md-6 text-start">
+                <h2 class="display-2 text-dark text-uppercase">Web Design</h2>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="shop.html" class="btn btn-medium btn-arrow btn-normal position-relative">
+                    <span class="text-uppercase">Shop all</span>
+                    <svg class="arrow-right position-absolute" width="18" height="20">
+                        <use xlink:href="#arrow-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="swiper web-design-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase"><a href="shop.html">japan tour</a></h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/product-item5.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>japan tour</h3>
+                          <p>秩父蒸汽火車與黑部立山雪牆6日│<br>長瀞川遊船+紫藤花+芝櫻</p>
+                          <a href="6-Day_Tateyama_Kurobe_Snow_Wall.html" target="_blank" class="btn btn-normal mt-3">點擊看完整網頁</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase"><a href="shop.html">japan tour</a></h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/product-item6.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>japan tour</h3>
+                          <p>秩父蒸汽火車與黑部立山雪牆7日│<br>長瀞川遊船+紫藤花+上高地</p>
+                          <a href="7-Day _Tateyama _Kurobe _Snow_Wall.html" target="_blank" class="btn btn-normal mt-3">點擊看完整網頁</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase"><a href="shop.html">japan tour</a></h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/product-item7.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>japan tour</h3>
+                          <p>北海道冬季限定破冰7日│<br>海破冰船、野付半島冰平線、根室花咲線-0</p>
+                          <a href="7-Day_Hokkaido_Winter_Icebreaker.html" target="_blank" class="btn btn-normal mt-3">點擊看完整網頁</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase"><a href="shop.html">japan tour</a></h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/product-item8.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>japan tour</h3>
+                          <p>秩父+新潟佐渡+小東北 賞櫻7日</p>
+                          <a href="7-Day_Tohoku_Cherry_Blossoms.html" target="_blank" class="btn btn-normal mt-3">點擊看完整網頁</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase"><a href="shop.html">Australia & NZ tour</a></h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/product-item9.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+
+                          <h3>Australia & NZ tour</h3>
+                          <p>巡遊紐西蘭南北島12日│<br>南極光、皇后鎮、冰河峽灣、藍泉秘境</p>
+                          <a href="12-Day_New_Zealand_North_&_South_Islands.html" target="_blank" class="btn btn-normal mt-3">點擊看完整網頁</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <div class="pagination-frame">
+                    <div class="swiper-pagination web-design-pagination position-relative w-auto mx-auto"></div>
+                </div>
+            </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="trending-products" class="product-store padding-large">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="display-header pb-3 d-flex justify-content-between col-md-12">
+            <h2 class="display-2 text-dark text-uppercase">Reels</h2>
+            <a href="shop.html" class="btn btn-medium btn-arrow btn-normal position-relative">
+              <span class="text-uppercase">See all reels</span> 
+              <svg class="arrow-right position-absolute" width="18" height="20">
+                <use xlink:href="#arrow-right"></use>
+              </svg>
+            </a>
+          </div>
+
+          <div class="carousel-wrapper">
+             <button class="nav-btn prev-btn" onclick="scrollCarousel('track-reels', -1)">&#10094;</button>
+
+             <div class="fade-mask">
+               <div class="scroll-track reels-track" id="track-reels">
+
+                 <div class="reel-card">
+                   <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F4272896372983743%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                 </div>
+                 <div class="reel-card">
+                   <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1194686596023637%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                 </div>
+                 <div class="reel-card">
+                   <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Flottotour%2Fvideos%2F1403245790787503%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                 </div>
+                  <div class="reel-card">
+                   <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Flottotour%2Fvideos%2F1272137244310152%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+
+                 </div>
+                  <div class="reel-card">
+                   <iframe src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1117785870338040%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                 </div>
+
+               </div>
+             </div>
+
+             <button class="nav-btn next-btn" onclick="scrollCarousel('track-reels', 1)">&#10095;</button>
+          </div>
+          </div>
+      </div>      
+    </section>
+
+    <section id="latest-blog" class="padding-large">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="display-header d-flex flex-wrap justify-content-between pb-3">
+              <h2 class="display-2 text-dark text-uppercase">Trending Videos</h2>
+              <a href="blog.html" class="btn btn-medium btn-arrow btn-normal position-relative">
+                <span class="text-uppercase">See all videos</span>            
+                <svg class="arrow-right position-absolute" width="18" height="20">
+                  <use xlink:href="#arrow-right"></use>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+            <div class="carousel-wrapper">
+              <button class="nav-btn prev-btn" onclick="scrollCarousel('track-landscape', -1)">&#10094;</button>
+
+              <div class="fade-mask">
+                <div class="scroll-track landscape-track" id="track-landscape">
+
+                  <div class="landscape-card">
+                    <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Flottotour%2Fvideos%2F779692568011877%2F&show_text=false&width=560&t=0" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                  </div>
+                  <div class="landscape-card">
+                    <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F879116804585917%2F&show_text=false&width=560&t=0" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+
+                  </div>
+                  <div class="landscape-card">
+                    <iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1577699020151649%2F&show_text=false&width=560&t=0" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
+                  </div>
+					  <div class="landscape-card">
+                   <div class="landscape-card">
+                    <iframe src="https://www.youtube.com/embed/Q1xQvKym2wo?si=6fFqdNIGVClB20rg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                   </div>
+                   </div>
+                   
+                   <div class="landscape-card">
+                    <iframe src="https://www.youtube.com/embed/vRGFakvXJwc?si=onqPqXd7PSU61-4G" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                   </div>
+                   
+                   <div class="landscape-card">
+                    <iframe src="https://www.youtube.com/embed/J90NRx1VXqw?si=MV5jODui5eGEM9L7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                   </div>
+                   </div>
+
+              </div>
+
+              <button class="nav-btn next-btn" onclick="scrollCarousel('track-landscape', 1)">&#10095;</button>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <footer id="footer" class="overflow-hidden padding-large">
+      <div class="container-fluid">
+        <div class="row d-flex justify-content-between">
+            <div class="col-lg-6 col-sm-6 pb-3">
+              <div class="footer-menu">
+                <img src="images/main-logo.png" alt="logo" class="pb-3" style="max-width: 150px;">
+                <p></p>
+              </div>
+              <div class="copyright mt-3">
+                <p></a></p>
+              </div>
+            </div>
+
+          <div class="col-lg-4 col-sm-6 pb-3">
+              <div class="footer-menu contact-item">
+                <h5 class="widget-title text-uppercase pb-2">Contact me</h5>
+                <p><a href=""></a></p>
+                <p><a href="mailto:">minminwu2010@gmail.com</a></p>
+                <p>© Copyright 2025.&nbsp; &nbsp;Designed by Mira Wu</p>
+              </div>
+            </div>
+        </div>
+      </div>
+    </footer>
+
+    <button id="back-to-top" title="Go to top">TOP ↑</button>
+
+    <div id="imageLightbox" class="lightbox-modal">
+        <span class="close-lightbox">&times;</span>
+        <img class="lightbox-content" id="img01">
+    </div>
+
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/plugins.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+    
+    <script>
+      // === 1. 影片輪播控制 (Reels & Trending Videos) ===
+      function scrollCarousel(trackId, direction) {
+        const track = document.getElementById(trackId);
+        
+        const card = track.querySelector('div');
+        const cardWidth = card.offsetWidth;
+        const gap = 20; 
+        const scrollAmount = cardWidth + gap;
+        
+        const maxScrollLeft = track.scrollWidth - track.clientWidth;
+        
+        if (direction === 1) { 
+          if (Math.ceil(track.scrollLeft) >= maxScrollLeft - 10) {
+            track.scrollTo({ left: 0, behavior: 'smooth' }); 
+          } else {
+            track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+          }
+        } else { 
+          if (track.scrollLeft <= 10) {
+            track.scrollTo({ left: maxScrollLeft, behavior: 'smooth' }); 
+          } else {
+            track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+          }
+        }
+      }
+
+      // === 2. Lightbox 燈箱控制 (Graphic Design) ===
+      var modal = document.getElementById("imageLightbox");
+      var modalImg = document.getElementById("img01");
+      // 選取 Graphic Design 區塊內的所有圖片
+      var images = document.querySelectorAll("#featured-products .image-holder img");
+      
+      // 為每張圖片添加點擊事件
+      images.forEach(img => {
+          img.onclick = function(){
+              modal.style.display = "flex"; // 開啟 modal
+              modalImg.src = this.src;
+          }
+      });
+
+      // 關閉按鈕
+      var span = document.getElementsByClassName("close-lightbox")[0];
+      span.onclick = function() {
+          modal.style.display = "none";
+      }
+      
+      // 點擊背景關閉
+      modal.onclick = function(e) {
+          if (e.target === modal) {
+              modal.style.display = "none";
+          }
+      }
+
+      // === 3. Web Design 輪播初始化 (Swiper) ===
+      // 確保 DOM 載入後執行
+      document.addEventListener('DOMContentLoaded', function () {
+        var swiper = new Swiper('.web-design-swiper', {
+          slidesPerView: 1, // 手機版
+          spaceBetween: 30,
+          pagination: {
+            el: '.web-design-pagination',
+            clickable: true,
+          },
+          breakpoints: {
+            640: {
+              slidesPerView: 2, // 平板
+            },
+            992: {
+              slidesPerView: 3, // 桌機版維持顯示 3 個，但總共有 5 個可滑動
+            }
+          }
+        });
+
+        // === 4. Go Top 按鈕控制 ===
+        var backToTopButton = document.getElementById("back-to-top");
+        
+        // 當視窗捲動超過 200px 時顯示按鈕
+        window.onscroll = function() {
+          if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            backToTopButton.style.display = "flex"; // 改為 flex 配合 CSS 中的置中
+          } else {
+            backToTopButton.style.display = "none";
+          }
+        };
+
+        // 按下按鈕時回到頂部
+        backToTopButton.onclick = function() {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+        };
+
+        // === 5. 手機版選單點擊後自動關閉 ===
+        var navLinks = document.querySelectorAll('.offcanvas-body .nav-link');
+        var offcanvasElement = document.getElementById('bdNavbar');
+        var bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+        
+        navLinks.forEach(function(link) {
+          link.addEventListener('click', function() {
+            // 檢查 offcanvas 是否為開啟狀態 (含有 'show' class)，是的話就關閉它
+            if (offcanvasElement.classList.contains('show')) {
+               bsOffcanvas.hide();
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
